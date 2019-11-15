@@ -1,28 +1,47 @@
 #include <stdio.h>
 
-void main()
+int chkSubsetArray(int *arr1, int arr1_size, int *arr2, int arr2_size)
 {
-    int arr1[3][3],i,j;
-
-    printf("\n\nRead a 2D array of size 3x3 and print the matrix :\n");
-    printf("------------------------------------------------------\n");
-
-    printf("Input elements in the matrix :\n");
-    for(i=0;i<3;i++)
+    int i,j;
+    for (i=0; i<arr2_size; i++)
     {
-        for(j=0;j<3;j++)
+        for (j=0; j<arr1_size; j++)
         {
-            printf("element - [%d],[%d] : ", i, j);
-            scanf("%d", &arr1[i][j]);
+            if(arr2[i] == arr1[j])
+                break;
         }
+        if(j == arr1_size)
+            return 0;
     }
+    return 1;
+}
 
-    printf("\nThe matrix is : \n");
-    for(i=0;i<3;i++)
+int main()
+{
+    int arr1[] = {4, 8, 7, 11, 6, 9, 5, 0, 2};
+    int arr2[] = {5, 4, 2, 0, 6};
+    int i;
+    int n2 = sizeof(arr2)/sizeof(arr2[0]);
+
+    printf("The given first array is : ");
+    for(i=0; i < n2; i++)
     {
-        printf("\n");
-        for(j=0;j<3;j++)
-            printf("%d\t",arr1[i][j]);
+        printf("%d ", arr1[i]);
     }
-    printf("\n\n");
+    printf("\n");
+
+    printf("The given second array is : ");
+    for(i=0; i < n2; i++)
+    {
+        printf("%d ", arr2[i]);
+    }
+    printf("\n");
+
+    if(chkSubsetArray(arr1, 9, arr2, 4))
+        printf("The second array is the subset of first array.");
+    else
+        printf("The second array is not a subset of first array.");
+
+    return 0;
+
 }
