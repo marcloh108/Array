@@ -1,66 +1,71 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#define R 4
+#define C 5
 
-int max(int a, int b)
+typedef struct Node
 {
-    return ((a > b) ? a : b);
+    bool chkEndOfCol;
+    struct Node *child[2];
+} myNode;
+myNode* newNode()
+{
+    myNode* temp = (myNode *)malloc( sizeof( myNode ) );
+    temp->chkEndOfCol = 0;
+    temp->child[0] = temp->child[1] = NULL;
+    return temp;
 }
-int min(int a, int b)
+bool insert( myNode** root, int (*arr1)[C], int r, int c )
 {
-    return ((a < b) ? a : b);
-}
-int median(int arr[], int size)
-{
-    if (size % 2 == 0)
-        return(arr[size/2] + arr[size/2-1])/2;
-    else
-        return arr[size/2];
-}
-
-int median2SortedArrays(int arr1[], int arr2[], int size)
-{
-    int med1;
-    int med2;
-    if(size <= 0) return -1;
-    if(size == 1) return (arr1[0] + arr2[0])/2;
-    if(size == 2) return (max(arr1[0],arr2[0]) + min(arr1[1], arr2[1])) / 2;
-
-    med1 = median(arr1, size);
-    med2 = median(arr2, size);
-
-    if(med1 == med2) return med1;
-
-    if(med1 < med2)
-    {
-        return median2SortedArrays(arr1 + size/2, arr2, size - size/2);
-    }
+    if ( *root == NULL )
+        *root = newNode();
+    if ( c < C )
+        return insert ( &( (*root)->child[ arr1[r][c] ] ), arr1, r, c+1 );
     else
     {
-        return median2SortedArrays(arr2 + size/2, arr1, size - size/2);
+        if ( !( (*root)->chkEndOfCol ) )
+            return (*root)->chkEndOfCol = 1;
+        return 0;
     }
 }
-
+void printRow( int (*arr1)[C], int r )
+{
+    int i;
+    for( i = 0; i < C; ++i )
+        printf( "%d ", arr1[r][i] );
+    printf("\n");
+}
+void findUniqueRows( int (*arr1)[C] )
+{
+    myNode* root = NULL;
+    int i;
+    printf("The unique rows of the given array are :  \n");
+    for ( i = 0; i < R; ++i )
+        if ( insert(&root, arr1, i, 0) )
+            printRow( arr1, i );
+}
 int main()
 {
-    int i, m, n;
-    int arr1[] = {1, 5, 13, 24, 35};
-    int arr2[] = {3, 8, 15, 17, 32};
-    m = sizeof(arr1) / sizeof(arr1[0]);
-    n = sizeof(arr2) / sizeof(arr2[0]);
-
-    printf("The given array -1 is : ");
-    for(i=0;i<m;i++)
+    int arr1[R][C] =
+        {{0, 1, 0, 0, 1},
+        {1, 0, 1, 1, 0},
+        {0, 1, 0, 0, 1},
+        {1, 0, 1, 0, 0}
+    };
+    int i,j;
+ //------------- print original array ------------------
+    printf("The given array is :  \n");
+    for(i = 0; i < R; i++)
     {
-        printf("%d ", arr1[i]);
+    for (j=0;j<C;j++)
+    {
+    printf("%d  ", arr1[i][j]);
     }
     printf("\n");
-
-    printf("The given array -2 is : ");
-    for(i=0;i<n;i++)
-    {
-        printf("%d ", arr2[i]);
     }
-    printf("\n");
+//------------------------------------------------------
 
-    printf("\nThe Median of the 2 sorted arrays is: %d", median2SortedArrays(arr1,arr2, n));
+    findUniqueRows( arr1 );
     return 0;
 }
