@@ -1,59 +1,66 @@
 #include <stdio.h>
-#define R 5
-#define C 5
 
-
-int getFirstOccur(int arr1[], int l, int h)
+int max(int a, int b)
 {
-if(h >= l)
+    return ((a > b) ? a : b);
+}
+int min(int a, int b)
 {
-    int mid = l + (h - l)/2;
-    if ( ( mid == 0 || arr1[mid-1] == 0) && arr1[mid] == 1)
-    return mid;
-    else if (arr1[mid] == 0)
-    return getFirstOccur(arr1, (mid + 1), h);
+    return ((a < b) ? a : b);
+}
+int median(int arr[], int size)
+{
+    if (size % 2 == 0)
+        return(arr[size/2] + arr[size/2-1])/2;
     else
-    return getFirstOccur(arr1, l, (mid -1));
+        return arr[size/2];
 }
-return -1;
-}
-int findRowMaxOne(int arr2d[R][C])
+
+int median2SortedArrays(int arr1[], int arr2[], int size)
 {
-    int max_row_index = 0, max = -1;
-    int i, index;
-    for (i = 0; i < R; i++)
+    int med1;
+    int med2;
+    if(size <= 0) return -1;
+    if(size == 1) return (arr1[0] + arr2[0])/2;
+    if(size == 2) return (max(arr1[0],arr2[0]) + min(arr1[1], arr2[1])) / 2;
+
+    med1 = median(arr1, size);
+    med2 = median(arr2, size);
+
+    if(med1 == med2) return med1;
+
+    if(med1 < med2)
     {
-    index = getFirstOccur (arr2d[i], 0, C-1);
-    if (index != -1 && C-index > max)
+        return median2SortedArrays(arr1 + size/2, arr2, size - size/2);
+    }
+    else
     {
-        max = C - index;
-        max_row_index = i;
+        return median2SortedArrays(arr2 + size/2, arr1, size - size/2);
     }
-    }
-    return max_row_index;
 }
 
 int main()
 {
-    int arr2d[R][C] = { {0, 1, 0, 1,1},
-                       {1, 1, 1, 1, 1},
-                       {1, 0, 0, 1, 0},
-                       {0, 0, 0, 0, 0},
-                       {1, 0, 0, 0, 1}
-    };
-    int i,j;
-    //------------- print original 2D array ------------------
-    printf("The given 2D array is :  \n");
-    for(i = 0; i < R; i++)
-    {
-    for(j=0; j<C ; j++)
-    {
-    printf("%d  ", arr2d[i][j]);
-    }
+    int i, m, n;
+    int arr1[] = {1, 5, 13, 24, 35};
+    int arr2[] = {3, 8, 15, 17, 32};
+    m = sizeof(arr1) / sizeof(arr1[0]);
+    n = sizeof(arr2) / sizeof(arr2[0]);
 
-    printf("\n");
+    printf("The given array -1 is : ");
+    for(i=0;i<m;i++)
+    {
+        printf("%d ", arr1[i]);
     }
-//------------------------------------------------------
-    printf("The index of row with maximum 1s is:  %d " , findRowMaxOne(arr2d));
+    printf("\n");
+
+    printf("The given array -2 is : ");
+    for(i=0;i<n;i++)
+    {
+        printf("%d ", arr2[i]);
+    }
+    printf("\n");
+
+    printf("\nThe Median of the 2 sorted arrays is: %d", median2SortedArrays(arr1,arr2, n));
     return 0;
 }
