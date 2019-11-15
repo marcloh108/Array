@@ -1,47 +1,59 @@
 #include <stdio.h>
+#define R 5
+#define C 5
 
-int chkSubsetArray(int *arr1, int arr1_size, int *arr2, int arr2_size)
+
+int getFirstOccur(int arr1[], int l, int h)
 {
-    int i,j;
-    for (i=0; i<arr2_size; i++)
+if(h >= l)
+{
+    int mid = l + (h - l)/2;
+    if ( ( mid == 0 || arr1[mid-1] == 0) && arr1[mid] == 1)
+    return mid;
+    else if (arr1[mid] == 0)
+    return getFirstOccur(arr1, (mid + 1), h);
+    else
+    return getFirstOccur(arr1, l, (mid -1));
+}
+return -1;
+}
+int findRowMaxOne(int arr2d[R][C])
+{
+    int max_row_index = 0, max = -1;
+    int i, index;
+    for (i = 0; i < R; i++)
     {
-        for (j=0; j<arr1_size; j++)
-        {
-            if(arr2[i] == arr1[j])
-                break;
-        }
-        if(j == arr1_size)
-            return 0;
+    index = getFirstOccur (arr2d[i], 0, C-1);
+    if (index != -1 && C-index > max)
+    {
+        max = C - index;
+        max_row_index = i;
     }
-    return 1;
+    }
+    return max_row_index;
 }
 
 int main()
 {
-    int arr1[] = {4, 8, 7, 11, 6, 9, 5, 0, 2};
-    int arr2[] = {5, 4, 2, 0, 6};
-    int i;
-    int n2 = sizeof(arr2)/sizeof(arr2[0]);
-
-    printf("The given first array is : ");
-    for(i=0; i < n2; i++)
+    int arr2d[R][C] = { {0, 1, 0, 1,1},
+                       {1, 1, 1, 1, 1},
+                       {1, 0, 0, 1, 0},
+                       {0, 0, 0, 0, 0},
+                       {1, 0, 0, 0, 1}
+    };
+    int i,j;
+    //------------- print original 2D array ------------------
+    printf("The given 2D array is :  \n");
+    for(i = 0; i < R; i++)
     {
-        printf("%d ", arr1[i]);
-    }
-    printf("\n");
-
-    printf("The given second array is : ");
-    for(i=0; i < n2; i++)
+    for(j=0; j<C ; j++)
     {
-        printf("%d ", arr2[i]);
+    printf("%d  ", arr2d[i][j]);
     }
+
     printf("\n");
-
-    if(chkSubsetArray(arr1, 9, arr2, 4))
-        printf("The second array is the subset of first array.");
-    else
-        printf("The second array is not a subset of first array.");
-
+    }
+//------------------------------------------------------
+    printf("The index of row with maximum 1s is:  %d " , findRowMaxOne(arr2d));
     return 0;
-
 }
