@@ -2,12 +2,12 @@
 
 void main()
 {
-    int arr1[100], arr2[100];
-    int i, n;
+    int arr1[100], fr1[100];
+    int i,j, n, ctr;
 
 
-       printf("\n\nCopy the elements one array into another array :\n");
-       printf("----------------------------------------------------\n");
+       printf("\n\nCount frequency of each element of an array :\n");
+       printf("-------------------------------------------------\n");
 
        printf("Input the number of elements to be stored in the array :");
        scanf("%d",&n);
@@ -17,25 +17,31 @@ void main()
         {
           printf("element - %d : ",i);
           scanf("%d",&arr1[i]);
+          fr1[i] = -1;
         }
-    /* Copy elements of first array into second array.*/
-    for(i=0; i<n; i++)
-    {
-        arr2[i] = arr1[i];
-    }
 
-    /* Prints the elements of first array   */
-    printf("\nThe elements stored in the first array are :\n");
     for(i=0; i<n; i++)
     {
-        printf("% 5d", arr1[i]);
+        ctr = 1;
+        for(j=i+1; j<n; j++)
+        {
+            if(arr1[i]==arr1[j])
+            {
+                ctr++;
+                fr1[j]=0;
+            }
+        }
+        if(fr1[i]!=0)
+        {
+            fr1[i] = ctr;
+        }
     }
-
-    /* Prints the elements copied into the second array. */
-    printf("\n\nThe elements copied into the second array are :\n");
+    printf("\nThe frequency of all elements of array : \n");
     for(i=0; i<n; i++)
     {
-        printf("% 5d", arr2[i]);
+        if(fr1[i]!=0)
+        {
+            printf("%d occurs %d times\n", arr1[i], fr1[i]);
+        }
     }
-           printf("\n\n");
 }
